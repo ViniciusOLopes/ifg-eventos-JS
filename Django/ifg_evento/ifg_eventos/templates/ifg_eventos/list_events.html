@@ -1,0 +1,16 @@
+{% extends 'ifg_eventos/base.html' %}
+
+{% block title %}
+Lista de Eventos | IFG-Eventos
+{% endblock %}
+
+{% block content %}
+    <ul>
+        {% for event in event %}
+            <div><a href="{% url 'event' event.id%}">{{ event.name }}</a></div>
+            {% empty %}
+                <p>Aqui ira listar todos os eventos disponiveis</p>
+            {% endfor %}
+    </ul>
+    
+{% endblock %}
