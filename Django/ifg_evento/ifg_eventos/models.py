@@ -40,11 +40,11 @@ class Registration(models.Model):
     """
     Cria as inscrições dos alunos nos eventos.
     """
-    name = models.TextField(max_length=30)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now_add=True)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"(Nome: {self.name}, Matricula: {self.id})"
+        return f"(Nome: {self.student.name}, Matricula: {self.student.id})"
 
 

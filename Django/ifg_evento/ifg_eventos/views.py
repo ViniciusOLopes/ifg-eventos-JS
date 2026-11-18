@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Event, Registration, Student
+from .forms import RegisterForm, EventForm
 
 # Create your views here.
 def index(request):
