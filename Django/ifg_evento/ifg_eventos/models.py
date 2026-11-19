@@ -11,11 +11,14 @@ class Event(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     max_registration = models.IntegerField(default=1)
     """
-    TO DO: Incluir informações do maps.
+    Informações necessarias para o mapa.
     """
+    local = models.CharField(max_length=255, blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True) 
 
     def __str__(self):
-        return super().__str__()
+        return self.name
 
 
 class Student(models.Model):

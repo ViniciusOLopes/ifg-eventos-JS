@@ -40,13 +40,17 @@ class EventForm(forms.ModelForm):
                   'description',
                   'start_date',
                   'end_date',
-                  'max_registration'
+                  'max_registration',
+                  'local',
+                  'latitude',
+                  'longitude'
                   ]
         labels = {'name':'Nome do Evento',
                   'description':'Descrição',
                   'start_date':'Data de inicio',
                   'end_date':'Data de fim',
-                  'max_registration':'Máximo de inscrições'
+                  'max_registration':'Máximo de inscrições',
+                  'local':'Localização',
                   }
         widgets = {
             'name': forms.TextInput(attrs={
@@ -59,5 +63,16 @@ class EventForm(forms.ModelForm):
 
             'max_registration':forms.TextInput(attrs={
                 'style': 'font-size: 18px'
-            })
+            }),
+
+            'local':forms.TextInput(attrs={
+                'id': 'local',
+                'style': 'font-size: 18px',
+                'readonly': 'readonly',
+                'placeholder': 'Clique em "Selecionar no Mapa"'
+            }),
+            
+            'latitude': forms.HiddenInput(attrs={'id': 'latitude'}),
+            'longitude': forms.HiddenInput(attrs={'id': 'longitude'}),
+            
         }

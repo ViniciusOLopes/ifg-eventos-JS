@@ -42,9 +42,8 @@ def add_event(request):
         form = EventForm(request.POST)
 
         if form.is_valid():
-            new_event = form.save(commit = False)
-            new_event.save()
-
+            form.save()
+            
             return HttpResponseRedirect(reverse('list_events'))
         
     context = {'form':form}
