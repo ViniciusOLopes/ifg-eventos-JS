@@ -91,8 +91,10 @@
         <a href="/" class="logo">IFG-Eventos</a>
         <ul>
             <li><a href="/">Início</a></li>
-            <li><a href="#">Sobre</a></li>
             <li><a href="{% url 'list_events' %}">Lista Eventos</a></li>
+            <li><a href="{% url 'sobre' %}">Sobre</a></li>
+            <!-- To Do: Deixar disponivel apenas para administradores -->
+            <li><a href="{% url 'add_event' %}">Adicionar eventos</a></li>
             <li><a href="/admin">Admin</a></li>
         </ul>
     </nav>

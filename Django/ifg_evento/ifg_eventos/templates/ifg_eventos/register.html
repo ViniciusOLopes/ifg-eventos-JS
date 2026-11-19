@@ -1,0 +1,12 @@
+{% extends "ifg_eventos/base.html" %}
+
+{% block content%}
+    <h2>Confirmar Inscrição</h2>
+
+    <p>Você esta prestes a se inscrever nesse evento.</p>
+    <form action="{% url 'register' event.id %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Confirmar Inscrição</button>
+    </form>
+{% endblock %}

@@ -24,7 +24,7 @@ class Student(models.Model):
     """
     name = models.CharField(max_length=50)
     email = models.EmailField(unique=True, verbose_name="E-mail")
-    cpf = models.CharField(max_length=14, unique=True, verbose_name="CPF")
+    cpf = models.CharField(max_length=14, verbose_name="CPF", null=True)
     cellphone = models.CharField(max_length=15, blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
