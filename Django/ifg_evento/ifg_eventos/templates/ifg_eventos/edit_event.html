@@ -1,0 +1,109 @@
+{% extends "ifg_eventos/base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Carrega os CSS locais -->
+<link rel="stylesheet" href="{% static 'ifg_eventos/css/leaflet.css' %}">
+<link rel="stylesheet" href="{% static 'ifg_eventos/css/style.css' %}">
+<link rel="stylesheet" href="{% static 'ifg_eventos/css/mapa.css' %}">
+
+<div class="container" style="text-align: left;">
+    <section class="pagina">
+        <div class="titulo-pagina">
+            <h2>Cadastrar evento</h2>
+            <p>Preencha as informações para cadastrar um novo evento.</p>
+        </div>
+
+        <form id="form-evento" class="formulario" action="{% url 'edit_event' event.id%}" method="post">
+            {% csrf_token %}
+
+            <div class="campo">
+                <label for="{{ form.name.id_for_label }}">Nome do evento</label>
+                {{ form.name }}
+                {{ form.name.errors }}
+            </div>
+
+            <div class="campo">
+                <label for="{{ form.description.id_for_label }}">Descrição</label>
+                {{ form.description }}
+                {{ form.description.errors }}
+            </div>
+
+            <div class="linha-campos">
+                <div class="campo">
+                    <label for="{{ form.start_date.id_for_label }}">Data de início</label>
+                    {{ form.start_date }}
+                    {{ form.start_date.errors }}
+                </div>
+
+                <div class="campo">
+                    <label for="{{ form.end_date.id_for_label }}">Data de encerramento</label>
+                    {{ form.end_date }}
+                    {{ form.end_date.errors }}
+                </div>
+            </div>
+
+            <div class="campo">
+                <label for="{{ form.max_registration.id_for_label }}">Máximo de inscrições</label>
+                {{ form.max_registration }}
+                {{ form.max_registration.errors }}
+            </div>
+
+            <div class="campo">
+                <label for="local">Local do evento</label>
+
+                <div class="localizacao">
+                    {{ form.local }}
+
+                    <button type="button" id="abrir-mapa" class="botao-secundario">
+                        Selecionar no mapa
+                    </button>
+                </div>
+
+                {{ form.latitude }}
+                {{ form.longitude }}
+            </div>
+
+            <div class="acoes" style="gap: 10px;">
+                <a href="{% url 'list_events' %}" class="botao-secundario" style="text-decoration: none;">
+                    Cancelar
+                </a>
+                <button type="submit" class="botao-principal">
+                    Salvar Alterações
+                </button>
+            </div>
+        </form>
+    </section>
+</div>
+<!-- Janela do mapa (exatamente com as classes do seu mapa.css) -->
+<div id="modal-mapa" class="modal">
+    <div class="modal-conteudo">
+        <div class="modal-cabecalho">
+            <div>
+                <h2>Selecionar localização</h2>
+                <p>Escolha o local clicando no mapa.</p>
+            </div>
+
+            <button type="button" id="fechar-mapa" class="botao-fechar" aria-label="Fechar janela">
+                &times;
+            </button>
+        </div>
+
+        <div id="mapa"></div>
+
+        <div class="modal-acoes">
+            <button type="button" id="cancelar-mapa" class="botao-secundario">
+                Cancelar
+            </button>
+
+            <button type="button" id="confirmar-mapa" class="botao-principal" disabled>
+                Confirmar localização
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Carrega os scripts locais -->
+<script src="{% static 'ifg_eventos/js/leaflet.js' %}"></script>
+<script src="{% static 'ifg_eventos/js/mapa.js' %}"></script>
+{% endblock %}

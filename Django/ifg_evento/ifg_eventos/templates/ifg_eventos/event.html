@@ -1,27 +1,260 @@
 {% extends 'ifg_eventos/base.html' %}
 
 {% block title %}
-Evento | IFG-Eventos
+{{ event.name }} | IFG-Eventos
 {% endblock %}
 
 {% block content %}
-    <ul>
-        <h2>{{event.name}}</h2>
-        <p>{{event.description}}</p>
-        {% if user.is_authenticated %}
-            <div>
-                Descrição: {{event.description}}
-                <p>Inscritos</p>
-                {% for registration in registrations %}
-                <p>Nome:{{ registration.student.name }}</p>
-                <p>Id:{{ registration.student.id }}</p>
-            
-            {% empty %}
-                <p>Nenhuma inscrição feita ainda</p>
-            {% endfor %}
+
+<!-- Biblioteca do Leaflet para o mapa -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<style>
+    /* Organização da página */
+    main {
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .evento-container {
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    /* Cartões */
+    .evento-card {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-left: 4px solid #3498db;
+        border-radius: 8px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .evento-card h2 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+    }
+
+    .evento-card h3 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+    }
+
+    .evento-descricao {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    /* Informações do evento */
+    .informacoes-evento {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .informacao {
+        background-color: #f4f4f9;
+        padding: 15px;
+        border-radius: 6px;
+    }
+
+    .informacao strong {
+        display: block;
+        color: #2c3e50;
+        margin-bottom: 5px;
+    }
+
+    .informacao span {
+        color: #555;
+    }
+
+    /* Mapa */
+    #mapa {
+        width: 100%;
+        height: 350px;
+        border-radius: 8px;
+        z-index: 1;
+    }
+
+    .mapa-indisponivel {
+        padding: 25px;
+        background-color: #f4f4f9;
+        border-radius: 6px;
+        color: #666;
+        text-align: center;
+    }
+
+    /* Lista de inscritos */
+    .inscrito {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+        color: #555;
+    }
+
+    .inscrito:last-child {
+        border-bottom: none;
+    }
+
+    .mensagem-vazia {
+        color: #666;
+        padding: 15px;
+        background-color: #f4f4f9;
+        border-radius: 6px;
+    }
+
+    /* Responsividade */
+    @media (max-width: 600px) {
+        .informacoes-evento {
+            grid-template-columns: 1fr;
+        }
+
+        .evento-card {
+            padding: 18px;
+        }
+
+        #mapa {
+            height: 280px;
+        }
+    }
+</style>
+
+<div class="evento-container">
+
+    <!-- Informações principais -->
+    <section class="evento-card">
+
+        <h2>{{ event.name }}</h2>
+
+        <p class="evento-descricao">
+            {{ event.description }}
+        </p>
+
+        <div class="informacoes-evento">
+
+            <div class="informacao">
+                <strong>Início do evento</strong>
+                <span>{{ event.start_date|date:"d/m/Y - H:i" }}</span>
             </div>
+
+            <div class="informacao">
+                <strong>Término do evento</strong>
+                <span>{{ event.end_date|date:"d/m/Y - H:i" }}</span>
+            </div>
+
+            <div class="informacao">
+                <strong>Local</strong>
+                <span>
+                    {% if event.local %}
+                        {{ event.local }}
+                    {% else %}
+                        Local não informado
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="informacao">
+                <strong>Limite de inscrições</strong>
+                <span>{{ event.max_registration }} alunos</span>
+            </div>
+
+        </div>
+
+        <button type="submit" href="{% url 'edit_event' event.id %}">Editar </button>
+
+    </section>
+
+    <!-- Localização do evento -->
+    <section class="evento-card">
+
+        <h3>Localização do evento</h3>
+
+        {% if event.latitude != None and event.longitude != None %}
+
+            <div id="mapa"
+                data-lat="{{ event.latitude }}"
+                data-lng="{{ event.longitude }}">
+            </div>
+
+        {% else %}
+
+            <div class="mapa-indisponivel">
+                <p>A localização deste evento ainda não foi cadastrada.</p>
+            </div>
+
         {% endif %}
-        
-    </ul>
-    
+
+    </section>
+
+    <!-- Lista de inscritos -->
+    {% if user.is_authenticated %}
+
+        <section class="evento-card">
+
+            <h3>Alunos inscritos</h3>
+
+            <p style="margin-bottom: 15px; color: #666;">
+                Total de inscritos: {{ registrations|length }}
+                / {{ event.max_registration }}
+            </p>
+
+            {% for registration in registrations %}
+
+                <div class="inscrito">
+
+                    <strong>{{ registration.student.name }}</strong>
+
+                    <p>
+                        Matrícula: {{ registration.student.id }}
+                    </p>
+
+                </div>
+
+            {% empty %}
+
+                <div class="mensagem-vazia">
+                    Nenhuma inscrição foi feita ainda.
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+    {% endif %}
+
+</div>
+
+<!-- JavaScript do Leaflet -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+{% if event.latitude != None and event.longitude != None %}
+
+<script>
+    // Recupera as coordenadas cadastradas no evento
+    const elementoMapa = document.getElementById("mapa");
+
+    const latitude = Number(elementoMapa.dataset.lat);
+    const longitude = Number(elementoMapa.dataset.lng);
+
+    // Cria o mapa na localização do evento
+    const mapa = L.map("mapa").setView([latitude, longitude], 16);
+
+    // Adiciona o mapa do OpenStreetMap
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(mapa);
+
+    // Adiciona um marcador na localização
+    L.marker([latitude, longitude])
+        .addTo(mapa)
+        .bindPopup("{{ event.name|escapejs }}")
+        .openPopup();
+
+</script>
+
+{% endif %}
+
 {% endblock %}

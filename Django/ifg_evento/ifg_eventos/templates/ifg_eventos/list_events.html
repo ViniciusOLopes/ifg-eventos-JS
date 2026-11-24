@@ -5,19 +5,166 @@ Lista de Eventos | IFG-Eventos
 {% endblock %}
 
 {% block content %}
-    <ul>
+
+<style>
+    /* Área principal da lista */
+    main {
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .eventos-container {
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .eventos-titulo {
+        margin-bottom: 8px;
+        color: #2c3e50;
+        font-size: 2rem;
+    }
+
+    .eventos-descricao {
+        margin-bottom: 25px;
+        color: #666;
+    }
+
+    /* Organização dos cartões */
+    .eventos-lista {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .evento-card {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-left: 4px solid #3498db;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .evento-info h3 {
+        color: #2c3e50;
+        margin-bottom: 8px;
+    }
+
+    .evento-info a {
+        color: #3498db;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+
+    .evento-info a:hover {
+        text-decoration: underline;
+    }
+
+    /* Botão de inscrição */
+    .botao-inscricao {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 11px 18px;
+        font-size: 0.95rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .botao-inscricao:hover {
+        background-color: #2980b9;
+    }
+
+    .mensagem-vazia {
+        background-color: white;
+        padding: 25px;
+        border-radius: 8px;
+        text-align: center;
+        color: #666;
+    }
+
+    /* Adaptação para celulares */
+    @media (max-width: 600px) {
+        .evento-card {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .botao-inscricao {
+            width: 100%;
+        }
+
+        .eventos-titulo {
+            font-size: 1.6rem;
+        }
+    }
+</style>
+
+<div class="eventos-container">
+
+    <h1 class="eventos-titulo">Eventos disponíveis</h1>
+
+    <p class="eventos-descricao">
+        Confira os eventos disponíveis e faça sua inscrição.
+    </p>
+
+    <div class="eventos-lista">
+
         {% for event in event %}
-            <div><a href="{% url 'event' event.id%}">{{ event.name }}</a></div>
-            {% if user.is_authenticated %}
-                <form action="{% url 'register' event.id %}" method="post">
-                {% csrf_token %}
-                <button type="subimit">Registrar-se</button>
-                
-            </form>
-            {% endif %}
-            {% empty %}
-                <p>Aqui ira listar todos os eventos disponiveis</p>
-            {% endfor %}
-    </ul>
-    
+
+            <div class="evento-card">
+
+                <div class="evento-info">
+
+                    <h3>{{ event.name }}</h3>
+
+                    <a href="{% url 'event' event.id %}">
+                        Ver detalhes do evento
+                    </a>
+
+                </div>
+
+                {% if user.is_authenticated %}
+
+                    <form action="{% url 'register' event.id %}" method="post">
+
+                        {% csrf_token %}
+
+                        <button type="submit" class="botao-inscricao">
+                            Inscrever-se
+                        </button>
+
+                    </form>
+
+                {% else %}
+
+                    <a href="{% url 'login' %}">
+                        Faça login para se inscrever
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        {% empty %}
+
+            <div class="mensagem-vazia">
+                <p>Nenhum evento disponível no momento.</p>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
 {% endblock %}

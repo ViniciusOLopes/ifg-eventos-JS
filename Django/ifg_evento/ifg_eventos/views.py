@@ -49,6 +49,25 @@ def add_event(request):
     context = {'form':form}
     return render(request, 'ifg_eventos/add_event.html', context)
 
+def edit_event(request, event_id):
+    """
+    Modifica os eventos.
+    """
+    event = Event.objects.get(id = event_id)
+    
+    if request.method != "POST":
+        form = EventForm(instance=event)
+    else:
+        form = EventForm(instance=event, data=request.POST)
+
+        if form.is_valid():
+            form.save()
+
+            return HttpResponseRedirect(reverse('event', kwargs={'event_id': event.id}))
+        
+    context = {'event':event, 'form':form}
+    return render(request, 'ifg_eventos/edit_event.html',context)
+
 
 def list_events(request):
     """
