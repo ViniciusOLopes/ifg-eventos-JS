@@ -47,6 +47,14 @@ class Registration(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
 
+    class Meta:
+            constraints = [
+            models.UniqueConstraint(
+                fields=['student', 'event'],
+                name='unique_student_event'
+            )
+        ]
+
     def __str__(self):
         return f"(Nome: {self.student.name}, Matricula: {self.student.id})"
 

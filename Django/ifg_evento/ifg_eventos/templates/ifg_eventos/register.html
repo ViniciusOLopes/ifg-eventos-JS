@@ -1,12 +1,42 @@
+
 {% extends "ifg_eventos/base.html" %}
 
-{% block content%}
-    <h2>Confirmar Inscrição</h2>
+{% block title %}
+Confirmar Inscrição | IFG Eventos
+{% endblock %}
 
-    <p>Você esta prestes a se inscrever nesse evento.</p>
-    <form action="{% url 'register' event.id %}" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Confirmar Inscrição</button>
-    </form>
+{% block content %}
+
+<div class="evento-container">
+
+    <div class="evento-card">
+
+        <h2>Confirmar Inscrição</h2>
+
+        <p>
+            Você está prestes a se inscrever no evento:
+        </p>
+
+        <h3>{{ event.name }}</h3>
+
+        <p>
+            Tem certeza de que deseja realizar sua inscrição?
+        </p>
+
+        <form action="{% url 'register' event.id %}" method="post">
+            {% csrf_token %}
+
+            <button type="submit">
+                Confirmar Inscrição
+            </button>
+        </form>
+
+        <a href="{% url 'event' event.id %}">
+            Voltar ao evento
+        </a>
+
+    </div>
+
+</div>
+
 {% endblock %}

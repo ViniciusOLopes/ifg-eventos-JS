@@ -104,7 +104,31 @@
         padding: 15px;
         background-color: #f4f4f9;
         border-radius: 6px;
+    }    
+    
+    /* Botão de inscrição */
+    .botao-inscricao {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 11px 18px;
+        font-size: 0.95rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
     }
+
+    .botao-inscricao:hover {
+        background-color: #2980b9;
+    }
+    .mensagem {
+    background-color: #f4f4f9;
+    border-left: 4px solid #3498db;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
 
     /* Responsividade */
     @media (max-width: 600px) {
@@ -123,6 +147,15 @@
 </style>
 
 <div class="evento-container">
+    {% if messages %}
+        <div class="mensagens-container">
+            {% for message in messages %}
+                <div class="mensagem {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
     <!-- Informações principais -->
     <section class="evento-card">
@@ -163,7 +196,7 @@
 
         </div>
 
-        <button type="submit" href="{% url 'edit_event' event.id %}">Editar </button>
+        <a type="submit" href="{% url 'edit_event' event.id %}">Editar </a>
 
     </section>
 
@@ -188,6 +221,51 @@
         {% endif %}
 
     </section>
+
+    <!-- Inscriçoes disponiveis -->
+    <div class="evento-card">
+
+        <h3>Inscrições</h3>
+
+        <p>
+            Total de inscritos: {{ total_inscritos }}
+        </p>
+
+        <p>
+            Vagas disponíveis: {{ vagas_disponiveis }}
+        </p>
+
+        {% if user.is_authenticated %}
+
+            {% if vagas_disponiveis > 0 %}
+
+                <form action="{% url 'register' event.id %}" method="post">
+                    {% csrf_token %}
+
+                    <button type="submit" class="botao-inscricao">
+                        Inscrever-se
+                    </button>
+                </form>
+
+            {% else %}
+
+                <p class="mensagem-vazia">
+                    Este evento está com as inscrições encerradas.
+                </p>
+
+            {% endif %}
+
+        {% else %}
+
+            <p>
+                <a href="{% url 'login' %}">
+                    Faça login para se inscrever.
+                </a>
+            </p>
+
+        {% endif %}
+
+    </div>
 
     <!-- Lista de inscritos -->
     {% if user.is_authenticated %}

@@ -138,11 +138,13 @@ Lista de Eventos | IFG-Eventos
                     <form action="{% url 'register' event.id %}" method="post">
 
                         {% csrf_token %}
-
-                        <button type="submit" class="botao-inscricao">
-                            Inscrever-se
-                        </button>
-
+                        {% if event.vagas_disponiveis > 0 %}
+                            <button type="submit" class="botao-inscricao">
+                                Inscrever-se
+                            </button>
+                        {% else %}
+                            <p>Vagas indisponiveis</p>
+                        {% endif %}
                     </form>
 
                 {% else %}
