@@ -31,7 +31,7 @@ function inicializarMapa() {
     // Centro inicial do mapa: Goiânia / IFG
     mapa = L.map("mapa").setView([-16.68, -49.25], 13);
 
-    // Usa a mesma camada OpenStreetMap da versão funcional em public/.
+    //
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(mapa);
@@ -52,7 +52,6 @@ function selecionarLocalizacao(coordenadas) {
         longitude: longitude
     };
 
-    // Se já existe um marcador, apenas muda sua posição
     if (marcador === null) {
         marcador = L.marker(coordenadas, {
             draggable: true
@@ -71,7 +70,7 @@ function selecionarLocalizacao(coordenadas) {
     botaoConfirmarMapa.disabled = false;
 }
 
-// Abre a janela do mapa
+
 function abrirMapa() {
     modalMapa.classList.add("aberto");
 
@@ -82,7 +81,6 @@ function abrirMapa() {
     }, 100);
 }
 
-// Fecha a janela do mapa
 function fecharMapa() {
     modalMapa.classList.remove("aberto");
 }
