@@ -8,10 +8,13 @@ Lista de Eventos | IFG-Eventos
     <ul>
         {% for event in event %}
             <div><a href="{% url 'event' event.id%}">{{ event.name }}</a></div>
-            <form action="{% url 'register' event.id %}" method="post">
+            {% if user.is_authenticated %}
+                <form action="{% url 'register' event.id %}" method="post">
                 {% csrf_token %}
                 <button type="subimit">Registrar-se</button>
+                
             </form>
+            {% endif %}
             {% empty %}
                 <p>Aqui ira listar todos os eventos disponiveis</p>
             {% endfor %}

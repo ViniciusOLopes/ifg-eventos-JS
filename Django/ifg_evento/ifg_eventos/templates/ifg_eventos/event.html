@@ -7,16 +7,20 @@ Evento | IFG-Eventos
 {% block content %}
     <ul>
         <h2>{{event.name}}</h2>
-        <div>
-            Descrição: {{event.description}}
-            <p>Inscritos</p>
-            {% for registration in registrations %}
-            <p>Nome:{{ registration.student.name }}</p>
-             <p>Id:{{ registration.student.id }}</p>
-        {% empty %}
-            <p>Nenhuma inscrição feita ainda</p>
-        {% endfor %}
-        </div>
+        <p>{{event.description}}</p>
+        {% if user.is_authenticated %}
+            <div>
+                Descrição: {{event.description}}
+                <p>Inscritos</p>
+                {% for registration in registrations %}
+                <p>Nome:{{ registration.student.name }}</p>
+                <p>Id:{{ registration.student.id }}</p>
+            
+            {% empty %}
+                <p>Nenhuma inscrição feita ainda</p>
+            {% endfor %}
+            </div>
+        {% endif %}
         
     </ul>
     

@@ -90,25 +90,31 @@
     <nav>
         <a href="/" class="logo">IFG-Eventos</a>
         <ul>
-              {% if  user.is_authenticated %}
+            {% if  user.is_authenticated %}
                 <li><p style= "color: white" >Olá, {{user.username}}</p></li>
-
-                {% if user.name == admin %} 
-                    <li><a href="/admin">Configurações</a></li>
-                {% endif %}
-            {% else %}
-                 <li><a href="{% url 'login' %}">Fazer login</a></li>   
             {% endif %}
-            
             <li><a href="/">Início</a></li>
             <li><a href="{% url 'list_events' %}">Lista Eventos</a></li>
             <li><a href="{% url 'sobre' %}">Sobre</a></li>
             <!-- To Do: Deixar disponivel apenas para administradores -->
-            <li><a href="{% url 'add_event' %}">Adicionar eventos</a></li>
-
-          
             
-
+            {% if  user.is_authenticated %}
+                <li><a href="{% url 'logout' %}" 
+                    style="color: white" 
+                    onclick="return confirm('Tem certeza que deseja sair?');">
+                    logout
+                    </a>
+                </li>
+                
+                {% if user.name == admin %} 
+                    <li><a href="{% url 'add_event' %}">Adicionar eventos</a></li>
+                    <li><a href="/admin">Configurações</a></li>
+                {% endif %}
+            
+            {% else %}
+                 <li><a href="{% url 'login' %}">Fazer login</a></li>
+                 <li><a href="{% url 'register' %}">criar conta</a></li>
+            {% endif %}
         </ul>
     </nav>
 
