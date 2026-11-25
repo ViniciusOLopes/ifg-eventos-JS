@@ -1,11 +1,230 @@
 {% extends 'ifg_eventos/base.html' %}
 
-{% block title %}
-Sobre | IFG-Eventos
-{% endblock %}
+{% block title %}Sobre | IFG-Eventos{% endblock %}
 
 {% block content %}
-    <p>
-        Aqui é a pagina que fala sobre o trabalho e como usar ele.
-    </p>
+<style>
+    .about-wrapper {
+        width: 100%;
+        max-width: 950px;
+        margin: 0 auto;
+        text-align: left;
+    }
+
+    /* Cabeçalho da Página */
+    .about-header {
+        background-color: #2c3e50;
+        color: #fff;
+        padding: 2.5rem 2rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .about-header .badge {
+        display: inline-block;
+        background-color: #3498db;
+        color: #fff;
+        font-size: 0.8rem;
+        font-weight: bold;
+        padding: 0.35rem 0.8rem;
+        border-radius: 20px;
+        margin-bottom: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .about-header h1 {
+        font-size: 2rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .about-header p {
+        color: #ecf0f1;
+        font-size: 1.05rem;
+        line-height: 1.6;
+    }
+
+    /* Blocos de Conteúdo */
+    .info-card {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+        margin-bottom: 2rem;
+    }
+
+    .info-card h2 {
+        color: #2c3e50;
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #f4f4f9;
+    }
+
+    .info-card p {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    /* Passos de Como Usar */
+    .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.2rem;
+    }
+
+    .step-item {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-top: 4px solid #3498db;
+    }
+
+    .step-number {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        background-color: #2c3e50;
+        color: #fff;
+        font-weight: bold;
+        text-align: center;
+        line-height: 28px;
+        border-radius: 50%;
+        margin-bottom: 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .step-item h3 {
+        color: #2c3e50;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .step-item p {
+        font-size: 0.92rem;
+        margin-bottom: 0;
+    }
+
+    /* Tecnologias */
+    .tech-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        margin-top: 1rem;
+    }
+
+    .tech-tag {
+        background-color: #eef2f7;
+        color: #2c3e50;
+        padding: 0.45rem 0.9rem;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    /* Créditos Acadêmicos */
+    .academic-footer {
+        background-color: #fff;
+        border-left: 4px solid #2c3e50;
+        padding: 1.5rem;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .academic-footer div p {
+        margin: 0.2rem 0;
+        color: #555;
+        font-size: 0.95rem;
+    }
+
+    .btn-back {
+        background-color: #3498db;
+        color: #fff;
+        padding: 0.7rem 1.4rem;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background 0.3s;
+    }
+
+    .btn-back:hover {
+        background-color: #2980b9;
+    }
+</style>
+
+<div class="about-wrapper">
+    <!-- Cabeçalho -->
+    <section class="about-header">
+        <span class="badge">Projeto Acadêmico &bull; Sistemas de Informação</span>
+        <h1>Sobre o IFG-Eventos</h1>
+        <p>
+            Plataforma web desenvolvida como projeto final de interação com APIs para o curso de 
+            <strong>Bacharelado em Sistemas de Informação</strong> do <strong>Instituto Federal de Goiás (IFG) – Câmpus Goiânia</strong>.
+        </p>
+    </section>
+
+    <!-- Objetivo e Arquitetura -->
+    <div class="info-card">
+        <h2>Objetivo do Sistema</h2>
+        <p>
+            O <strong>IFG-Eventos</strong> foi projetado para centralizar e facilitar a divulgação de palestras, 
+            oficinas, feiras científicas e atividades culturais realizadas no ambiente acadêmico. 
+        </p>
+        <p>
+            Do ponto de vista técnico, a aplicação demonstra a integração entre uma interface web desenvolvida em 
+            <strong>Django</strong> e o consumo/manipulação de dados via <strong>API</strong>, aplicando conceitos 
+            de autenticação de usuários, controle de permissões e requisições dinâmicas.
+        </p>
+
+        <div class="tech-tags">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">Django Framework</span>
+            <span class="tech-tag">Integração com API</span>
+            <span class="tech-tag">HTML5 &amp; CSS3</span>
+        </div>
+    </div>
+
+    <!-- Guia de Uso -->
+    <div class="info-card">
+        <h2>Como utilizar a plataforma</h2>
+        <p>Siga o passo a passo abaixo para explorar todos os recursos disponíveis no sistema:</p>
+
+        <div class="steps-grid">
+            <div class="step-item">
+                <span class="step-number">1</span>
+                <h3>Crie sua Conta</h3>
+                <p>Acesse a aba <strong>Criar conta</strong> no menu superior para registrar seu usuário e senha no sistema.</p>
+            </div>
+
+            <div class="step-item">
+                <span class="step-number">2</span>
+                <h3>Explore os Eventos</h3>
+                <p>Clique em <strong>Lista Eventos</strong> para visualizar a programação completa com datas, locais e detalhes.</p>
+            </div>
+
+            <div class="step-item">
+                <span class="step-number">3</span>
+                <h3>Gerenciamento (Admin)</h3>
+                <p>Usuários administradores têm acesso exclusivo ao cadastro de novos eventos e às configurações do sistema.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ficha Técnica / Autor -->
+    <div class="academic-footer">
+        <div>
+            <p><strong>Desenvolvedor:</strong> Vinicius Oliveira Lopes</p>
+            <p><strong>Curso:</strong> Sistemas de Informação &mdash; IFG Câmpus Goiânia</p>
+        </div>
+        <a href="{% url 'list_events' %}" class="btn-back">Ver Eventos Disponíveis</a>
+    </div>
+</div>
 {% endblock %}

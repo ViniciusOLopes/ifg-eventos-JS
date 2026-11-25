@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Event(models.Model):
     """
@@ -25,6 +26,12 @@ class Student(models.Model):
     """
     Cria a identidade dos alunos.
     """
+    user = models.OneToOneField(
+         User,
+         on_delete=models.CASCADE,
+         related_name='student'
+
+    )
     name = models.CharField(max_length=50)
     email = models.EmailField(unique=True, verbose_name="E-mail")
     cpf = models.CharField(max_length=14, verbose_name="CPF", null=True)

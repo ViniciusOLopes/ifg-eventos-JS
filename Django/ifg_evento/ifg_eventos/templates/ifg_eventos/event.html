@@ -196,8 +196,11 @@
 
         </div>
 
-        <a type="submit" href="{% url 'edit_event' event.id %}">Editar </a>
-
+                <!-- COLOCANDO RESTRIÇÃO PARA APÊNAS ADMIN EDITEM EVENTOS -->
+        {% if user.is_authenticated and user.is_staff%}
+            <a href="{% url 'edit_event' event.id %}">Editar </a>            
+        {% endif %}
+        
     </section>
 
     <!-- Localização do evento -->

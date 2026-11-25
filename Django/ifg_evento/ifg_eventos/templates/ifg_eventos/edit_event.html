@@ -8,72 +8,110 @@
 <link rel="stylesheet" href="{% static 'ifg_eventos/css/mapa.css' %}">
 
 <div class="container" style="text-align: left;">
-    <section class="pagina">
-        <div class="titulo-pagina">
-            <h2>Cadastrar evento</h2>
-            <p>Preencha as informações para cadastrar um novo evento.</p>
+ 
+<section class="pagina">
+    <div class="titulo-pagina">
+        <h2>Editar evento</h2>
+        <p>Altere as informações do evento conforme necessário.</p>
+    </div>
+
+    <!-- Formulário de edição -->
+    <form id="form-evento"
+          class="formulario"
+          action="{% url 'edit_event' event.id %}"
+          method="post">
+
+        {% csrf_token %}
+
+        <div class="campo">
+            <label for="{{ form.name.id_for_label }}">Nome do evento</label>
+            {{ form.name }}
+            {{ form.name.errors }}
         </div>
 
-        <form id="form-evento" class="formulario" action="{% url 'edit_event' event.id%}" method="post">
-            {% csrf_token %}
+        <div class="campo">
+            <label for="{{ form.description.id_for_label }}">Descrição</label>
+            {{ form.description }}
+            {{ form.description.errors }}
+        </div>
 
+        <div class="linha-campos">
             <div class="campo">
-                <label for="{{ form.name.id_for_label }}">Nome do evento</label>
-                {{ form.name }}
-                {{ form.name.errors }}
-            </div>
-
-            <div class="campo">
-                <label for="{{ form.description.id_for_label }}">Descrição</label>
-                {{ form.description }}
-                {{ form.description.errors }}
-            </div>
-
-            <div class="linha-campos">
-                <div class="campo">
-                    <label for="{{ form.start_date.id_for_label }}">Data de início</label>
-                    {{ form.start_date }}
-                    {{ form.start_date.errors }}
-                </div>
-
-                <div class="campo">
-                    <label for="{{ form.end_date.id_for_label }}">Data de encerramento</label>
-                    {{ form.end_date }}
-                    {{ form.end_date.errors }}
-                </div>
+                <label for="{{ form.start_date.id_for_label }}">Data de início</label>
+                {{ form.start_date }}
+                {{ form.start_date.errors }}
             </div>
 
             <div class="campo">
-                <label for="{{ form.max_registration.id_for_label }}">Máximo de inscrições</label>
-                {{ form.max_registration }}
-                {{ form.max_registration.errors }}
+                <label for="{{ form.end_date.id_for_label }}">Data de encerramento</label>
+                {{ form.end_date }}
+                {{ form.end_date.errors }}
             </div>
+        </div>
 
-            <div class="campo">
-                <label for="local">Local do evento</label>
+        <div class="campo">
+            <label for="{{ form.max_registration.id_for_label }}">
+                Máximo de inscrições
+            </label>
+            {{ form.max_registration }}
+            {{ form.max_registration.errors }}
+        </div>
 
-                <div class="localizacao">
-                    {{ form.local }}
+        <div class="campo">
+            <label for="{{ form.local.id_for_label }}">Local do evento</label>
 
-                    <button type="button" id="abrir-mapa" class="botao-secundario">
-                        Selecionar no mapa
-                    </button>
-                </div>
+            <div class="localizacao">
+                {{ form.local }}
 
-                {{ form.latitude }}
-                {{ form.longitude }}
-            </div>
-
-            <div class="acoes" style="gap: 10px;">
-                <a href="{% url 'list_events' %}" class="botao-secundario" style="text-decoration: none;">
-                    Cancelar
-                </a>
-                <button type="submit" class="botao-principal">
-                    Salvar Alterações
+                <button type="button"
+                        id="abrir-mapa"
+                        class="botao-secundario">
+                    Selecionar no mapa
                 </button>
             </div>
+
+            {{ form.latitude }}
+            {{ form.longitude }}
+        </div>
+
+    </form>
+
+    <!-- Botões de ação -->
+    <div class="acoes" style="gap: 10px;">
+
+        <!-- Formulário independente de exclusão -->
+        <form action="{% url 'delete_event' event.id %}"
+              method="post"
+              onsubmit="return confirm('Tem certeza que deseja excluir esse evento?');">
+
+            {% csrf_token %}
+
+            <button type="submit" 
+                class="botao-secundario" 
+                style="
+                    background-color:  darkred;
+                    transition: background-color 0.2s;
+                    color: white">
+                Excluir Evento
+            </button>
         </form>
-    </section>
+
+        <!-- Cancelar edição -->
+        <a href="{% url 'list_events' %}"
+           class="botao-secundario"
+           style="text-decoration: none;">
+            Cancelar
+        </a>
+
+        <!-- Salvar alterações -->
+        <button type="submit"
+                form="form-evento"
+                class="botao-principal">
+            Salvar Alterações
+        </button>
+
+    </div>
+</section>
 </div>
 <!-- Janela do mapa (exatamente com as classes do seu mapa.css) -->
 <div id="modal-mapa" class="modal">

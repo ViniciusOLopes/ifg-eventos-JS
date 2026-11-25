@@ -1,9 +1,11 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from .models import Event, Registration, Student
 from .forms import RegisterForm, EventForm
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 
 
 # Create your views here.
@@ -43,7 +45,7 @@ def event(request, event_id):
 
     return render(request, 'ifg_eventos/event.html', context)
 
-
+@staff_member_required
 def add_event(request):
     """
     Cria um novo envento.
@@ -61,6 +63,7 @@ def add_event(request):
     context = {'form':form}
     return render(request, 'ifg_eventos/add_event.html', context)
 
+@staff_member_required
 def edit_event(request, event_id):
     """
     Modifica os eventos.
@@ -96,49 +99,45 @@ def list_events(request):
 
     return render(request, 'ifg_eventos/list_events.html', context)
 
-
-
+@staff_member_required
+def delete_event(request, event_id):
+    """
+    Excluira o evento.
+    """
+    if request.method == 'POST':
+        event = Event.objects.get(id = event_id)
+        event.delete()
+    return redirect('list_events')
+    
 def register(request, event_id):
     """
     Registrar um aluno no evento.
     """
-    event = Event.objects.get(id=event_id)
+    event = get_object_or_404(Event,id=event_id)
     total_inscritos = Registration.objects.filter(event=event).count()
 
-    if request.method != 'POST':
-        form = RegisterForm()
-    else:
-        form = RegisterForm(request.POST)
+    if request.method == 'POST':  
+        # Verifica se o evento ainda possui vagas
+        if total_inscritos >= event.max_registration:
+            messages.error(request,'Este evento atingiu o limite de inscrições.')
+            return HttpResponseRedirect(reverse('event', kwargs={'event_id': event_id}))
 
-        if form.is_valid():
-            
-            # Verifica se o evento ainda possui vagas
-            if total_inscritos >= event.max_registration:
-                messages.error(request,'Este evento atingiu o limite de inscrições.')
-                return HttpResponseRedirect(reverse('event', kwargs={'event_id': event_id}))
+        student = request.user.student
 
-            # Busca o ID do aluno enviado pelo formulário
-            student_id = request.POST.get('student')
+        # Verifica se o aluno já está inscrito
+        if Registration.objects.filter(student=student,event=event).exists():
+            messages.error(request,'Você já está inscrito neste evento!')
+            return HttpResponseRedirect(reverse('event', kwargs={'event_id': event_id}))
 
-            # Busca ou instancia um Student
-            student, created = Student.objects.get_or_create(id=student_id)
+        # Cria a inscrição
+        Registration.objects.create(
+            student=student,
+            event=event
+        )
 
-            # Verifica se o aluno já está inscrito
-            if Registration.objects.filter(student=student,event=event).exists():
-                messages.error(request,'Você já está inscrito neste evento!')
-                return HttpResponseRedirect(reverse('event', kwargs={'event_id': event_id}))
+        messages.success(request,'Inscrição realizada com sucesso!')
 
-            # Cria a inscrição
-            new_registration = form.save(commit=False)
-            new_registration.student = student
-            new_registration.event = event
-            new_registration.save()
+        return HttpResponseRedirect(reverse('list_events'))
 
-            messages.success(request,'Inscrição realizada com sucesso!')
-
-            return HttpResponseRedirect(reverse('list_events'))
-
-    context = {'event': event, 'form': form}
+    context = {'event': event}
     return render(request, 'ifg_eventos/register.html', context)
-
-            
